@@ -14,4 +14,5 @@ Newer files for the jQuery Vector Map Library from: https://github.com/10bestdes
 Installation
 ======
 Step 1: On Extensions -> Install upload the zip file.
+
 Step 2: On Extensions -> Modifications click on the Refresh button in the top right corner.
