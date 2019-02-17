@@ -4,7 +4,7 @@
 	<code>dashboard-bg-map</code>
 	<version>1.0</version>
 	<author>veinara</author>
-	<link></link>
+	<link>https://github.com/veinara/oc3-dashboard-bulgaria-map</link>
 
 	<file path="admin/language/en-gb/extension/dashboard/map.php">
 		<operation error="log">
@@ -148,7 +148,7 @@
 		}
 
 		if ($implode) {
-			$query = $this->db->query("SELECT COUNT(*) AS total, SUM(o.total) AS amount, o.payment_postcode AS postcode FROM `" . DB_PREFIX . "order` o
+			$query = $this->db->query("SELECT COUNT(*) AS total, SUM(o.total) AS amount, o.shipping_postcode AS postcode FROM `" . DB_PREFIX . "order` o
              WHERE o.order_status_id IN(" . implode(',', $implode) . ") GROUP BY postcode");
 
 			return $query->rows;
