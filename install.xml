@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Dashboard Bulgaria Map</name>
+	<code>dashboard-bg-map</code>
+	<version>1.0</version>
+	<author>veinara</author>
+	<link></link>
+
+	<file path="admin/language/en-gb/extension/dashboard/map.php">
+		<operation error="log">
+			<search>
+				<![CDATA[$_['heading_title']    = 'World Map';]]>
+			</search>
+			<add position="replace"><![CDATA[$_['heading_title']    = 'Bulgaria Map';]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/view/template/extension/dashboard/map_info.twig">
+		<operation error="log">
+			<search>
+				<![CDATA[<script type="text/javascript" src="view/javascript/jquery/jqvmap/maps/jquery.vmap.world.js"></script>]]>
+			</search>
+			<add position="replace"><![CDATA[<script type="text/javascript" src="view/javascript/jquery/jqvmap/maps/jquery.vmap.bulgaria.js"></script>]]></add>
+		</operation>
+		<operation error="log">
+			<search>
+				<![CDATA[color: '#9FD5F1',]]>
+			</search>
+			<add position="replace"><![CDATA[color: '#42b3ee',]]></add>
+		</operation>
+		<operation error="log">
+			<search>
+				<![CDATA[map: 'world_en',]]>
+			</search>
+			<add position="replace"><![CDATA[map: 'bulgaria_en',]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/controller/extension/dashboard/map.php">
+		<operation error="log">
+			<search>
+				<![CDATA[	public function map() {]]>
+			</search>
+			<add position="before"><![CDATA[
+
+    private function get_map_id($postcode) {
+
+        $map_id = '';
+
+        // postcode rules from http://www.crc.bg/files/_bg/oo12.htm
+        // the map ids are set in admin/view/javascript/jquery/jqvmap/maps/jquery.vmap.bulgaria.js
+
+        if ($postcode >= 1000 && $postcode <= 1999)  $map_id = 'bg-22'; // София-град
+        elseif ($postcode >= 2000 && $postcode <= 2299)  $map_id = 'bg-21'; // София
+        elseif ($postcode >= 2300 && $postcode <= 2499)  $map_id = 'bg-13'; // Перник
+        elseif ($postcode >= 2500 && $postcode <= 2699)  $map_id = 'bg-09'; // Кюстендил
+        elseif ($postcode >= 2700 && $postcode <= 2999)  $map_id = 'bg-29'; // Благоевград
+        elseif ($postcode >= 3000 && $postcode <= 3399)  $map_id = 'bg-05'; // Враца
+        elseif ($postcode >= 3400 && $postcode <= 3699)  $map_id = 'bg-11'; // Монтана
+        elseif ($postcode >= 3700 && $postcode <= 3999)  $map_id = 'bg-04'; // Видин
+        elseif ($postcode >= 4000 && $postcode <= 4399)  $map_id = 'bg-15'; // Пловдив
+        elseif ($postcode >= 4400 && $postcode <= 4699)  $map_id = 'bg-12'; // Пазарджик
+        elseif ($postcode >= 4700 && $postcode <= 4999)  $map_id = 'bg-20'; // Смолян
+        elseif ($postcode >= 5000 && $postcode <= 5299)  $map_id = 'bg-03'; // Велико Търново
+        elseif ($postcode >= 5300 && $postcode <= 5499)  $map_id = 'bg-06'; // Габрово
+        elseif ($postcode >= 5500 && $postcode <= 5799)  $map_id = 'bg-10'; // Ловеч
+        elseif ($postcode >= 5800 && $postcode <= 5999)  $map_id = 'bg-14'; // Плевен
+        elseif ($postcode >= 6000 && $postcode <= 6299)  $map_id = 'bg-23'; // Стара Загора
+        elseif ($postcode >= 6300 && $postcode <= 6599)  $map_id = 'bg-25'; // Хасково
+        elseif ($postcode >= 6600 && $postcode <= 6999)  $map_id = 'bg-08'; // Кърджали
+        elseif ($postcode >= 7000 && $postcode <= 7199)  $map_id = 'bg-17'; // Русе
+        elseif ($postcode >= 7200 && $postcode <= 7499)  $map_id = 'bg-16'; // Разград
+        elseif ($postcode >= 7500 && $postcode <= 7699)  $map_id = 'bg-18'; // Силистра
+        elseif ($postcode >= 7700 && $postcode <= 7999)  $map_id = 'bg-24'; // Търговище
+        elseif ($postcode >= 8000 && $postcode <= 8599)  $map_id = 'bg-01'; // Бургас
+        elseif ($postcode >= 8600 && $postcode <= 8799)  $map_id = 'bg-26'; // Ямбол
+        elseif ($postcode >= 8800 && $postcode <= 8999)  $map_id = 'bg-19'; // Сливен
+        elseif ($postcode >= 9000 && $postcode <= 9299)  $map_id = 'bg-02'; // Варна
+        elseif ($postcode >= 9300 && $postcode <= 9699)  $map_id = 'bg-07'; // Добрич
+        elseif ($postcode >= 9700 && $postcode <= 9999)  $map_id = 'bg-28'; // Шумен
+
+        return $map_id;
+    }
+
+    ]]></add>
+		</operation>
+
+		<operation error="log">
+			<search>
+				<![CDATA[$results = $this->model_extension_dashboard_map->getTotalOrdersByCountry();]]>
+			</search>
+			<add position="replace"><![CDATA[$results = $this->model_extension_dashboard_map->getTotalOrdersByRegion();]]></add>
+		</operation>
+
+		<operation error="log">
+			<search>
+				<![CDATA['total'  => $result['total'],]]>
+			</search>
+			<add position="replace"></add>
+		</operation>
+
+		<operation error="log">
+			<search>
+				<![CDATA['amount' => $this->currency->format($result['amount'], $this->config->get('config_currency'))]]>
+			</search>
+			<add position="replace"></add>
+		</operation>
+
+
+		<operation error="log">
+			<search>
+				<![CDATA[$this->response->addHeader('Content-Type: application/json');]]>
+			</search>
+			<add position="before"><![CDATA[array_walk($json, function(&$region_data){
+            $region_data['amount'] = $this->currency->format($region_data['amount'], $this->config->get('config_currency'));
+            return $region_data;
+        });
+
+        ]]></add>
+		</operation>
+
+		<operation error="log">
+			<search>
+				<![CDATA[$json[strtolower($result['iso_code_2'])] = array(]]>
+			</search>
+			<add position="replace"><![CDATA[$map_code = $this->get_map_id($result['postcode']);
+
+			$json[$map_code] = array(
+				'total'  => (isset($json[$map_code]['total']) ? $json[$map_code]['total'] : 0) + $result['total'],
+				'amount' => (isset($json[$map_code]['amount']) ? $json[$map_code]['amount'] : 0) + $result['amount']
+        ]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/model/extension/dashboard/map.php">
+		<operation error="log">
+			<search>
+				<![CDATA[public function getTotalOrdersByCountry() {]]>
+			</search>
+			<add position="before"><![CDATA[
+    public function getTotalOrdersByRegion() {
+		$implode = array();
+
+		if (is_array($this->config->get('config_complete_status'))) {
+			foreach ($this->config->get('config_complete_status') as $order_status_id) {
+				$implode[] = (int)$order_status_id;
+			}
+		}
+
+		if ($implode) {
+			$query = $this->db->query("SELECT COUNT(*) AS total, SUM(o.total) AS amount, o.payment_postcode AS postcode FROM `" . DB_PREFIX . "order` o
+             WHERE o.order_status_id IN(" . implode(',', $implode) . ") GROUP BY postcode");
+
+			return $query->rows;
+		} else {
+			return array();
+		}
+	}
+
+]]>
+			</add>
+		</operation>
+	</file>
+</modification>
